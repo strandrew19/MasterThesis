@@ -6,6 +6,7 @@ Special Thanks to https://github.com/Altimis for the open source package Scweet.
 
 <details><summary>Using get_retweeters from strandrew19/Scweet</summary>
 <p>
+  
 To enable the get_retweeters function, ensure that the .env variable has been set to enable logins for twitter scraping (instructions are avalible under the github repo)
 
 get_retweeters has been modeled after get_users_following, get_users_followers and thus all variables are comparable except for the addition of tweets. 
@@ -18,5 +19,6 @@ test = get_retweeters(list(tweets_dict.keys()), tweets_dict, env_path, headless=
 The values of the dictionary correspond to the tweet number that comes immediately after the status.
 
 Remeber to set file_path variable as well to ensure the file will be written out (in json format)
+  
 </p>
 </details>
