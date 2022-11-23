@@ -73,3 +73,43 @@ for dataset in os.listdir():
     dataframe = dataframe.drop(dataframe.index[dup_list]).reset_index(drop=True)
     dataframe = dataframe.drop(dataframe.columns[0], axis=1)
     dataframe.to_csv(dataset)
+    
+#Grab information on all retweeters (Name, Description Bio and # of Followers)
+main_retweeters_extended = "../Tweet_Retweeters/TwitterHandelsExtended/"
+os.chdir(main_retweeters)
+list_for_dataframe = []
+for dataframe in os.listdir():
+    if dataframe[-3:] == 'csv':
+        username_df = pd.read_csv(dataframe)
+        username_list = username_df[dataframe[:8]].to_list()
+        #returns a dictionary with bio information 
+        user_dict = get_user_information(username_list)
+        #iterate through the dictionary to get user's bio, age and followers
+        for user in user_dict:
+            #Values are a list: [following, followers, join_date, birthday, location, website, desc]
+            list_for_dataframe.append({'Name':user, 'Bio':user_dict[user][6], 'Followers':user_dict[user][1]})
+        Extended_Df = pd.DataFrame(list_for_dataframe)
+        os.chdir(main_retweeters_extended)
+        Extended_Df.to_csv(dataframe)
+        os.chdir(main_retweeters)
+        list_for_dataframe.clear()
+    
+input_data = '../Tweet_Retweeters/TwitterHandelsExtended'
+neighbours_output = '../Tweet_Retweeters/Neighbors'
+
+#Get min(50, followers) from each of the retweeters to build a full social networks (capped at 50 due to enormous number of retweeters)
+os.chdir(main_retweeters_extended)
+ 
+for dataframe in os.listdir():
+    print(dataframe)
+    if dataframe[-3:] == 'csv':
+        target_df = pd.read_csv(dataframe)
+        follower_max = 50
+        list_of_dicts = []
+        print(len(target_df.Name.to_list()))
+        list_of_dicts.append(get_users_followers(target_df.Name.to_list()[:], env=env_path, limit=50, write_out=False))
+        Results_df = pd.DataFrame(list_of_dicts)
+        os.chdir(neighbours_output)
+        Results_df.to_csv(f'{dataframe}')
+        os.chdir(input_data)
+        list_of_dicts.clear
