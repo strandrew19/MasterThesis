@@ -113,3 +113,19 @@ for dataframe in os.listdir():
         Results_df.to_csv(f'{dataframe}')
         os.chdir(input_data)
         list_of_dicts.clear
+        
+retweet_Neighbors = "../Neighbors/"
+os.chdir(retweet_Neighbors)   
+list_of_names = []
+for dataframe in os.listdir():
+    if dataframe[-3:] == 'csv':
+        data = pd.read_csv(dataframe)
+        data = data.loc[:, data.columns.drop(data.columns[0])]
+        data = data.transpose()   
+        for i in data[0]:
+            if i:
+                # print(i)
+                list_of_names += i.split("'")[1::2]
+retweet_subNeighbors = "../SubNeighbors/"
+os.chdir(retweet_Neighbors)         
+pd.DataFrame(list(set(list_of_names)), columns=['Names']).to_csv('FullNameSet.csv')    
